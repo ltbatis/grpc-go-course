@@ -24,6 +24,7 @@ func main() {
 	doUnary(c)
 	doServerStreaming(c)
 	doClientStreaming(c)
+	doBiDiStreaming(c)
 }
 
 func doUnary(c greetpb.GreetServiceClient) {
@@ -114,4 +115,16 @@ func doClientStreaming(c greetpb.GreetServiceClient) {
 		log.Fatalf("error while receiving response from LongGreet: %v", err)
 	}
 	fmt.Printf("LongGreet Response: %v\n", res)
+}
+
+func doBiDiStreaming(c greetpb.GreetServiceClient) {
+	fmt.Println("Sarting to do a BiDi Streaming RPC...")
+
+	//TODO: we create a stream by invoking a client
+
+	//TODO: we send a bunch of messages to the client (go routine)
+
+	//TODO: we receive a bunch of messages from the client (go routine)
+
+	//TODO: clock until everything is done
 }
