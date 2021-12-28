@@ -21,9 +21,9 @@ func main() {
 	defer cc.Close()
 
 	c := greetpb.NewGreetServiceClient(cc)
-	doUnary(c)
-	doServerStreaming(c)
-	doClientStreaming(c)
+	//doUnary(c)
+	//doServerStreaming(c)
+	//doClientStreaming(c)
 	doBiDiStreaming(c)
 }
 
@@ -160,19 +160,30 @@ func doBiDiStreaming(c greetpb.GreetServiceClient) {
 	go func() {
 		// function to send a bunch of messages
 		for _, req := range requests {
-			fmt.Printf("Sending message: %v", req)
+			fmt.Printf("Sending message: %v\n", req)
 			stream.Send(req)
 			time.Sleep(1000 * time.Millisecond)
 		}
 		stream.CloseSend()
 	}()
 
-	//TODO: we receive a bunch of messages from the client (go routine)
+	// we receive a bunch of messages from the client (go routine)
 	go func() {
 		// function to receive a bunch of messages
-
+		for {
+			res, err := stream.Recv()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatalf("Error while receiving a response from server: %v", err)
+				break
+			}
+			fmt.Printf("Received: %v\n", res.GetResult())
+		}
+		close(waitc)
 	}()
 
-	//TODO: block until everything is done
+	// block until everything is done
 	<-waitc
 }
